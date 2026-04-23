@@ -1,1 +1,35 @@
-// placeholder: apps/registration/src/components/suppliers/SupplierBaseForm.tsx
+import { useFormConfig } from "../../hooks/useFormConfig";
+import { DynamicForm } from "../shared/DynamicForm";
+
+interface SupplierBaseFormProps {
+  tenantId: string;
+  onSubmit: (values: Record<string, string>) => Promise<void>;
+}
+
+export function SupplierBaseForm({
+  tenantId,
+  onSubmit,
+}: SupplierBaseFormProps) {
+  const { config, loading, error, source, placement } = useFormConfig(
+    tenantId,
+    "supplier",
+  );
+
+  if (loading || !config) {
+    return <p className="text-sm text-slate-500">Cargando configuracion...</p>;
+  }
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-slate-500">
+        Conexion: {source ?? "mock"} | Ubicacion: {placement ?? "shared-db"}
+      </p>
+      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+      <DynamicForm
+        config={config}
+        submitLabel="Guardar proveedor"
+        onSubmit={onSubmit}
+      />
+    </div>
+  );
+}
