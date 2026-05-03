@@ -4,6 +4,9 @@ import { Skeleton } from "../components/ui/Skeleton";
 
 const MainLayout = lazy(() => import("../layouts/MainLayout"));
 const DashboardPage = lazy(() => import("../pages/DashboardPage"));
+const RegistrationPage = lazy(
+  () => import("../../apps/registration/src/pages/RegistrationPage"),
+);
 const ModulePlaceholderPage = lazy(
   () => import("../pages/ModulePlaceholderPage"),
 );
@@ -46,7 +49,12 @@ export const appRouter = createBrowserRouter([
       },
       {
         path: "registration",
-        element: withSuspense(<PlaceholderRoute moduleName="Registro" />),
+        element: withSuspense(
+          <RegistrationPage
+            tenantId="demo-tenant-001"
+            userId="demo-user-001"
+          />,
+        ),
       },
       {
         path: "filed",

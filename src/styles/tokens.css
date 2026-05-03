@@ -1,15 +1,18 @@
 :root {
   --font-sans: "Outfit", "Segoe UI", sans-serif;
 
-  --color-bg: #0c0e14;
-  --color-surface: #13161f;
-  --color-surface-2: #171b26;
-  --color-border: #232838;
-  --color-text: #e6e9f2;
-  --color-text-muted: #9aa3ba;
-  --color-accent-violet: #6c63ff;
-  --color-accent-teal: #4ecdc4;
-  --color-danger: #ff6b6b;
+  --color-bg: #0f1419;
+  --color-surface: #16192e;
+  --color-surface-2: #1a1f3a;
+  --color-border: #2a2f52;
+  --color-text: #f0f2f8;
+  --color-text-muted: #a5afc9;
+  --color-accent-violet: #6366f1;
+  --color-accent-teal: #06b6d4;
+  --color-accent-purple: #8b5cf6;
+  --color-danger: #ef4444;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
 
   --sidebar-expanded: 220px;
   --sidebar-collapsed: 56px;
