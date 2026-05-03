@@ -15,20 +15,17 @@ if (supabaseUrl && supabasePublishableKey) {
 
 export const supabase = supabaseClient;
 
-/**
- * Helper function to handle Supabase errors
- * @param error - The error from Supabase
- * @returns A formatted error message
- */
 export function getSupabaseErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
   }
+
   if (typeof error === "object" && error !== null) {
     const err = error as Record<string, unknown>;
     if ("message" in err) {
       return String(err.message);
     }
   }
+
   return "An unknown error occurred";
 }

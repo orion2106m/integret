@@ -238,7 +238,7 @@ VITE_SUPABASE_URL=https://wszemokqxhavaytcfkfk.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_K9icw77vHwYRqFa8FHb3Ng_JFFZegbV
 ```
 
-2. **Cliente Supabase** (`src/utils/supabase.ts`):
+2. **Cliente Supabase** (`apps/registration/src/utils/supabase.ts`):
 
 ```typescript
 import { supabase } from "../utils/supabase";

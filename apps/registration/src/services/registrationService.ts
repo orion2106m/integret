@@ -1,7 +1,7 @@
 import {
   getSupabaseErrorMessage,
   supabase,
-} from "../../../../src/utils/supabase";
+} from "../utils/supabase";
 import type {
   FormConfigResolution,
   RegistrationFormData,

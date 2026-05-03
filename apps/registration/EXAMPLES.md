@@ -261,7 +261,7 @@ console.log("Errors:", errors);
 // MANEJO DE ERRORES
 // ============================================================
 
-import { getSupabaseErrorMessage } from "@/utils/supabase";
+import { getSupabaseErrorMessage } from "../src/utils/supabase";
 
 export async function ErrorHandlingExample() {
 try {
