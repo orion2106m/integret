@@ -1,238 +1,215 @@
+import {
+  type LucideIcon,
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  CreditCard,
+  FileSignature,
+  FileText,
+  LayoutDashboard,
+  Phone,
+  Settings,
+  UserCheck,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
-import type { ModuleIcon, SidebarItem } from "../../types/shell.types";
+import { Badge } from "../ui/Badge";
+
+type SidebarBadgeTone = "success" | "warning" | "disabled";
+
+interface SidebarNavItem {
+  key: string;
+  label: string;
+  to?: string;
+  icon: LucideIcon;
+  badge?: string;
+  badgeTone?: SidebarBadgeTone;
+  disabled?: boolean;
+  tooltip?: string;
+}
+
+interface SidebarSection {
+  label: string;
+  items: SidebarNavItem[];
+}
 
 export interface SidebarProps {
   collapsed: boolean;
-  items: SidebarItem[];
+  sections: SidebarSection[];
   onToggle: () => void;
 }
 
-function BrandMark() {
+function ZenithMark() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-      <rect
-        x="3"
-        y="3"
-        width="8"
-        height="8"
-        rx="1.6"
-        fill="var(--color-accent-violet)"
-      />
-      <rect
-        x="13"
-        y="3"
-        width="8"
-        height="8"
-        rx="1.6"
-        fill="var(--color-accent-teal)"
-      />
-      <rect
-        x="3"
-        y="13"
-        width="8"
-        height="8"
-        rx="1.6"
-        fill="var(--color-accent-teal)"
-      />
-      <rect
-        x="13"
-        y="13"
-        width="8"
-        height="8"
-        rx="1.6"
-        fill="var(--color-accent-violet)"
-      />
-    </svg>
+    <div className="flex h-8 w-8 items-center justify-center rounded-[10px] border border-[var(--color-border-accent)] bg-[var(--color-accent-muted)] text-[var(--color-accent)] shadow-[var(--shadow-accent)]">
+      <span className="text-[11px] font-bold tracking-[0.18em]">Z</span>
+    </div>
   );
 }
 
-function Icon({ name }: { name: ModuleIcon }) {
-  const common = "h-5 w-5";
-
-  switch (name) {
-    case "dashboard":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M3 13h8V3H3zm10 8h8v-6h-8zM3 21h8v-6H3zm10-8h8V3h-8z" />
-        </svg>
-      );
-    case "assistance":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M4 5h16v14H4z" />
-          <path d="M8 9h8m-8 4h6" />
-        </svg>
-      );
-    case "registration":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M7 3h10v18H7z" />
-          <path d="M10 7h4m-4 4h4m-4 4h4" />
-        </svg>
-      );
-    case "filed":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M6 3h8l4 4v14H6z" />
-          <path d="M14 3v4h4" />
-        </svg>
-      );
-    case "contact":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <circle cx="12" cy="8" r="3" />
-          <path d="M5 20a7 7 0 0 1 14 0" />
-        </svg>
-      );
-    case "contracts":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M5 4h14v16H5z" />
-          <path d="M8 8h8m-8 4h8m-8 4h5" />
-        </svg>
-      );
-    case "billing":
-      return (
-        <svg
-          className={common}
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          aria-hidden="true"
-        >
-          <path d="M4 7h16v10H4z" />
-          <path d="M4 11h16" />
-        </svg>
-      );
-    default:
-      return null;
-  }
+function NavIcon({ icon: Icon }: { icon: LucideIcon }) {
+  return <Icon className="h-4.5 w-4.5 stroke-[1.8]" aria-hidden="true" />;
 }
 
-export default function Sidebar({ collapsed, items, onToggle }: SidebarProps) {
+function SidebarItemRow({
+  item,
+  collapsed,
+}: {
+  item: SidebarNavItem;
+  collapsed: boolean;
+}) {
+  const baseClasses =
+    "group flex h-10 items-center gap-3 rounded-[var(--radius-sm)] px-3 text-sm font-medium transition-colors duration-150";
+  const activeClasses =
+    "border-l-2 border-[var(--color-accent)] bg-[var(--color-accent-muted)] text-[var(--color-accent)]";
+  const idleClasses =
+    "border-l-2 border-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]";
+
+  const inner = (
+    <>
+      <span
+        className={`flex h-6 w-6 items-center justify-center rounded-[8px] ${collapsed ? "mx-auto" : "bg-[var(--color-accent-muted)] text-[var(--color-accent)]"}`}
+      >
+        <NavIcon icon={item.icon} />
+      </span>
+      {!collapsed ? (
+        <>
+          <span className="min-w-0 flex-1 truncate">{item.label}</span>
+          {item.badge ? (
+            <Badge
+              tone={
+                item.badgeTone === "success"
+                  ? "success"
+                  : item.badgeTone === "warning"
+                    ? "warning"
+                    : "disabled"
+              }
+              className="ml-auto text-[10px] px-1.5 py-0.5 rounded-sm"
+            >
+              {item.badge}
+            </Badge>
+          ) : null}
+        </>
+      ) : null}
+    </>
+  );
+
+  if (item.disabled || !item.to) {
+    return (
+      <div
+        title={item.tooltip ?? item.label}
+        aria-disabled="true"
+        className={`${baseClasses} cursor-not-allowed opacity-50 ${idleClasses}`}
+      >
+        {inner}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      to={item.to}
+      title={item.tooltip ?? item.label}
+      className={({ isActive }) =>
+        `${baseClasses} ${isActive ? activeClasses : idleClasses}`
+      }
+    >
+      {inner}
+    </NavLink>
+  );
+}
+
+export default function Sidebar({
+  collapsed,
+  sections,
+  onToggle,
+}: SidebarProps) {
   return (
     <aside
-      className="surface-1 relative flex h-screen flex-col py-3 transition-[width] duration-300"
+      className="surface-1 flex h-full flex-col overflow-hidden transition-[width] duration-[200ms] ease-[cubic-bezier(0.2,0,0,1)]"
       style={{
-        width: collapsed
-          ? "var(--sidebar-collapsed)"
-          : "var(--sidebar-expanded)",
+        width: collapsed ? "52px" : "220px",
       }}
     >
-      <div className="mb-4 border-b border-[var(--color-border)] px-2 pb-3">
-        <div className="mb-2 flex items-center justify-between">
-          <div
-            className={`flex min-w-0 items-center gap-2 ${collapsed ? "justify-center" : ""}`}
-          >
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[10px] bg-[var(--color-surface-2)]">
-              <BrandMark />
-            </span>
-            <div className={collapsed ? "hidden" : "block"}>
-              <p className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
-                Plataforma
+      <div className="flex items-start justify-between gap-3 border-b border-[var(--color-border)] px-3 py-3">
+        <div
+          className={`flex min-w-0 items-center gap-3 ${collapsed ? "justify-center" : ""}`}
+        >
+          <ZenithMark />
+          {!collapsed ? (
+            <div className="min-w-0">
+              <p className="text-[11px] uppercase tracking-[0.22em] text-[var(--color-text-secondary)]">
+                Plataforma Zenith
               </p>
-              <p className="-mt-0.5 text-sm font-semibold uppercase tracking-[0.1em] text-[var(--color-text)]">
-                Zenith
+              <p className="truncate text-sm font-semibold uppercase tracking-[0.12em] text-[var(--color-text-primary)]">
+                Shell
               </p>
             </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={onToggle}
-            className="flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
-            aria-label={
-              collapsed ? "Expandir navegación" : "Colapsar navegación"
-            }
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              {collapsed ? (
-                <path d="M9 18 15 12 9 6" />
-              ) : (
-                <path d="M15 18 9 12l6-6" />
-              )}
-            </svg>
-          </button>
+          ) : null}
         </div>
 
-        <p
-          className={`text-[11px] text-[var(--color-text-muted)] ${collapsed ? "hidden" : "block"}`}
+        <button
+          type="button"
+          onClick={onToggle}
+          className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-[var(--radius-sm)] border border-transparent text-[var(--color-text-secondary)] transition-colors duration-150 hover:border-[var(--color-border)] hover:bg-[var(--color-bg-elevated)] hover:text-[var(--color-text-primary)]"
+          aria-label={collapsed ? "Expandir navegación" : "Colapsar navegación"}
         >
-          Shell administrativo
-        </p>
+          {collapsed ? (
+            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          )}
+        </button>
       </div>
 
-      <nav className="flex-1 space-y-1 px-2">
-        {items.map((item) => (
-          <NavLink
-            key={item.key}
-            to={item.ruta}
-            className={({ isActive }) =>
-              `anim-slide-in flex h-10 items-center gap-3 rounded-[var(--radius-sm)] px-2 text-sm transition-colors ${
-                isActive
-                  ? "bg-[rgba(108,99,255,0.18)] text-[var(--color-accent-violet)]"
-                  : "text-[var(--color-text-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-text)]"
-              }`
-            }
-          >
-            <span className="inline-flex h-5 w-5 items-center justify-center">
-              <Icon name={item.icono} />
+      <div className="border-b border-[var(--color-border)] px-3 py-3">
+        <div
+          className={`flex items-center gap-2 ${collapsed ? "justify-center" : ""}`}
+        >
+          <span className="relative flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[var(--color-success)]">
+            <span className="absolute h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-success)] opacity-40" />
+          </span>
+          {!collapsed ? (
+            <span className="text-sm font-medium text-[var(--color-text-primary)]">
+              Zenith Software
             </span>
-            <span className={collapsed ? "hidden" : "truncate"}>
-              {item.etiqueta}
-            </span>
-          </NavLink>
+          ) : null}
+        </div>
+      </div>
+
+      <nav className="flex-1 space-y-5 overflow-y-auto px-2 py-4">
+        {sections.map((section) => (
+          <div key={section.label} className="space-y-2">
+            {!collapsed ? (
+              <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--color-text-secondary)]">
+                {section.label}
+              </p>
+            ) : null}
+
+            <div className="space-y-1">
+              {section.items.map((item) => (
+                <SidebarItemRow
+                  key={item.key}
+                  item={item}
+                  collapsed={collapsed}
+                />
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
     </aside>
   );
 }
+
+export const sidebarNavIcons = {
+  dashboard: LayoutDashboard,
+  assistance: Clock3,
+  registration: UserCheck,
+  filed: FileText,
+  contact: Phone,
+  contracts: FileSignature,
+  billing: CreditCard,
+  settings: Settings,
+  alerts: Bell,
+} as const;

@@ -1,12 +1,13 @@
 import { Suspense, lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
+import { ProtectedRoute } from "../auth/ProtectedRoute";
 import { Skeleton } from "../components/ui/Skeleton";
 
 const MainLayout = lazy(() => import("../layouts/MainLayout"));
+const AuthLayout = lazy(() => import("../layouts/AuthLayout"));
+const AuthPage = lazy(() => import("../pages/AuthPage"));
+const RegistrationPage = lazy(() => import("../pages/RegistrationPage"));
 const DashboardPage = lazy(() => import("../pages/DashboardPage"));
-const RegistrationPage = lazy(
-  () => import("../../apps/registration/src/pages/RegistrationPage"),
-);
 const ModulePlaceholderPage = lazy(
   () => import("../pages/ModulePlaceholderPage"),
 );
@@ -18,7 +19,8 @@ interface PlaceholderRouteProps {
 
 function LazyFallback() {
   return (
-    <div className="min-h-screen p-6">
+    // CORRECCIÓN: era min-h-screen que forzaba scroll interno — cambiado a h-full
+    <div className="h-full w-full p-6">
       <Skeleton className="h-10 w-48" />
       <Skeleton className="mt-4 h-28 w-full" />
       <Skeleton className="mt-4 h-28 w-full" />
@@ -36,8 +38,20 @@ function withSuspense(node: JSX.Element): JSX.Element {
 
 export const appRouter = createBrowserRouter([
   {
+    path: "/auth",
+    element: withSuspense(<AuthLayout />),
+    children: [{ index: true, element: withSuspense(<AuthPage />) }],
+  },
+  {
     path: "/",
-    element: withSuspense(<MainLayout />),
+    element: withSuspense(
+      <ProtectedRoute
+        allowedRoles={["super_admin", "admin", "user"]}
+        allowGuests
+      >
+        <MainLayout />
+      </ProtectedRoute>,
+    ),
     children: [
       {
         index: true,

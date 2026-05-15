@@ -24,3 +24,16 @@ dist/
 
 # Mac/OS files
 .DS_Store
+
+# files sql
+SUPABASE_MIGRATIONS.sql
+SUPER_ADMIN_SETUP.sql
+
+# repeated readme
+AUTH_CMS_IMPLEMENTATION.md
+IMPLEMENTATION_SUMMARY.md
+PROJECT_COMPLETION.md
+QUICK_START.md
+
+# others
+ARCHITECTURE.md

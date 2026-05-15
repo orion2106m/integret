@@ -2,17 +2,11 @@ import { Outlet } from "react-router-dom";
 
 export default function AuthLayout() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--color-bg)] p-6">
-      <div className="surface-1 w-full max-w-md rounded-[var(--radius-lg)] p-6 text-center">
-        <h1 className="text-xl font-semibold text-[var(--color-text)]">
-          Autenticación pendiente
-        </h1>
-        <p className="mt-2 text-sm text-[var(--color-text-muted)]">
-          Este layout está listo para integrar el flujo de acceso cuando el
-          módulo de autenticación esté disponible.
-        </p>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-bg)] p-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(79,70,229,0.16),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(45,212,191,0.12),transparent_32%)]" />
+      <div className="relative z-10 w-full">
+        <Outlet />
       </div>
-      <Outlet />
     </div>
   );
 }

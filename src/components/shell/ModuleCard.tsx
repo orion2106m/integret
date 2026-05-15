@@ -1,3 +1,14 @@
+import {
+  type LucideIcon,
+  ArrowRight,
+  Clock3,
+  CreditCard,
+  FileSignature,
+  FileText,
+  LayoutDashboard,
+  Phone,
+  UserCheck,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import type { AccentTone, ModuleIcon } from "../../types/shell.types";
 import { Badge } from "../ui/Badge";
@@ -10,112 +21,32 @@ export interface ModuleCardProps {
   icon: ModuleIcon;
   accent: AccentTone;
   status: string;
+  statusTone?: "success" | "warning" | "disabled" | "info";
+  meta: string;
+  disabled?: boolean;
 }
 
-function ModuleIconView({ icon }: { icon: ModuleIcon }) {
-  const common = "h-5 w-5";
+function ModuleIconView({ icon: Icon }: { icon: LucideIcon }) {
+  return <Icon className="h-4 w-4 stroke-[1.8]" aria-hidden="true" />;
+}
 
-  if (icon === "assistance") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M4 5h16v14H4z" />
-        <path d="M8 9h8m-8 4h6" />
-      </svg>
-    );
+function resolveIcon(icon: ModuleIcon): LucideIcon {
+  switch (icon) {
+    case "assistance":
+      return Clock3;
+    case "registration":
+      return UserCheck;
+    case "filed":
+      return FileText;
+    case "contact":
+      return Phone;
+    case "contracts":
+      return FileSignature;
+    case "billing":
+      return CreditCard;
+    default:
+      return LayoutDashboard;
   }
-
-  if (icon === "registration") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M7 3h10v18H7z" />
-        <path d="M10 7h4m-4 4h4m-4 4h4" />
-      </svg>
-    );
-  }
-
-  if (icon === "filed") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M6 3h8l4 4v14H6z" />
-        <path d="M14 3v4h4" />
-      </svg>
-    );
-  }
-
-  if (icon === "contact") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <circle cx="12" cy="8" r="3" />
-        <path d="M5 20a7 7 0 0 1 14 0" />
-      </svg>
-    );
-  }
-
-  if (icon === "contracts") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M5 4h14v16H5z" />
-        <path d="M8 8h8m-8 4h8m-8 4h5" />
-      </svg>
-    );
-  }
-
-  if (icon === "billing") {
-    return (
-      <svg
-        className={common}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      >
-        <path d="M4 7h16v10H4z" />
-        <path d="M4 11h16" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg
-      className={common}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    >
-      <path d="M3 13h8V3H3zm10 8h8v-6h-8zM3 21h8v-6H3zm10-8h8V3h-8z" />
-    </svg>
-  );
 }
 
 export default function ModuleCard({
@@ -125,52 +56,71 @@ export default function ModuleCard({
   icon,
   accent,
   status,
+  statusTone = status === "Próximo"
+    ? "disabled"
+    : status === "Config"
+      ? "warning"
+      : "success",
+  meta,
+  disabled = false,
 }: ModuleCardProps) {
+  const AccentIcon = resolveIcon(icon);
   const accentClass =
     accent === "violet"
-      ? "text-[var(--color-accent-violet)]"
-      : "text-[var(--color-accent-teal)]";
-  const accentBorderClass =
-    accent === "violet"
-      ? "border-[rgba(108,99,255,0.3)]"
-      : "border-[rgba(78,205,196,0.3)]";
-  const badgeTone = accent === "violet" ? "violet" : "teal";
+      ? "text-[var(--color-accent)]"
+      : "text-[var(--color-info)]";
+
+  const statusToneClass =
+    statusTone === "success"
+      ? "success"
+      : statusTone === "warning"
+        ? "warning"
+        : statusTone === "info"
+          ? "info"
+          : "disabled";
+
+  const cardClasses = disabled
+    ? "p-3 opacity-45"
+    : "p-3 transition-colors duration-150 hover:bg-[var(--color-bg-elevated)]";
 
   return (
-    <Card
-      className={`anim-fade-up border-l-2 p-4 transition-colors duration-200 hover:bg-[var(--color-surface-2)] ${accentBorderClass}`}
-    >
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div
-          className={`inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--color-surface-2)] ${accentClass}`}
-        >
-          <ModuleIconView icon={icon} />
+    <Card className={`${cardClasses} flex flex-col gap-2`}>
+      {/* Fila superior: icono + badge */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[8px] border border-[var(--color-border)] bg-[var(--color-accent-muted)] text-[var(--color-accent)]">
+          <ModuleIconView icon={AccentIcon} />
         </div>
-        <Badge tone={badgeTone}>{status}</Badge>
+        <Badge tone={statusToneClass}>{status}</Badge>
       </div>
 
-      <h3 className="text-base font-semibold text-[var(--color-text)]">
+      {/* Título */}
+      <h3 className="truncate text-[14px] font-semibold text-[var(--color-text-primary)]">
         {title}
       </h3>
-      <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+
+      {/* Descripción — 1 línea */}
+      <p className="text-[12px] text-[var(--color-text-secondary)] truncate">
         {description}
       </p>
 
-      <Link
-        to={to}
-        className={`mt-4 inline-flex items-center text-sm font-semibold ${accentClass}`}
-      >
-        Entrar
-        <svg
-          className="ml-1 h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
+      {/* Meta */}
+      <p className="text-[11px] text-[var(--color-text-disabled)] truncate">
+        {meta}
+      </p>
+
+      {/* CTA */}
+      {disabled ? (
+        <div className="inline-flex items-center gap-1 text-[12px] font-semibold text-[var(--color-text-disabled)]">
+          Próximo <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </div>
+      ) : (
+        <Link
+          to={to}
+          className={`inline-flex items-center gap-1 text-[12px] font-semibold transition-colors duration-150 hover:text-[var(--color-accent-hover)] ${accentClass}`}
         >
-          <path d="M5 12h14m-6-6 6 6-6 6" />
-        </svg>
-      </Link>
+          Entrar <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </Link>
+      )}
     </Card>
   );
 }
